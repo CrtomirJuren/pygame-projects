@@ -10,24 +10,24 @@ WHITE = (255,255,255)
 BLACK = (0,0,0)
 RED = (255,0,0)
 
-def drawGrid(w,rows,surface):
-	"""
-	This function draws a square grid on main display
-	"""
-	#distance between grid lines
-	sizeBtwn = w // rows
-	x = 0
-	y = 0
+def drawGrid(w, rows, surface):
+    """
+    This function draws a square grid on main display
+    """
+    # distance between grid lines
+    sizeBtwn = w // rows
+    x = 0
+    y = 0
 
-	#create grid by drawing lines
-	for l in range(rows):
-		x = x + sizeBtwn
-		y = y + sizeBtwn
+    # create grid by drawing lines
+    for l in range(rows):
+        x = x + sizeBtwn
+        y = y + sizeBtwn
 
-		#vertical lines
-		pygame.draw.line(surface, WHITE, (x,0), (x,w))
-		#horizontal lines
-		pygame.draw.line(surface, WHITE, (0,y), (w,y))
+    # vertical lines
+    pygame.draw.line(surface, WHITE, (x, 0), (x, w))
+    # horizontal lines
+    pygame.draw.line(surface, WHITE, (0, y), (w, y))
 
 def redrawWindow(surface):
 	global rows, width
@@ -37,6 +37,7 @@ def redrawWindow(surface):
 	drawGrid(width, rows, surface)
 	#update display
 	pygame.display.update()
+
 #---------------------------------------------------------------------------------------
 def key_events():
 	for event in pygame.event.get():
