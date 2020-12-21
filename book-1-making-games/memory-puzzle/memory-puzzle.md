@@ -8,4 +8,5 @@ http://inventwithpython.com/pygame/chapter3.html
 - v3:    create playing grid, and clicked positions, game grid, boxes, transformations
 - v3_2:  pixel, grid all using touples
 - v4:    finished grid with dictionary, moved to card logic
-- v5:    creating card shapes
+- v5:    creating card icons, list, shuffle icons
+- v6:    add animation of turn card around after 2 sec

@@ -73,19 +73,34 @@ window.blit(background, (0, 0))
 #--------------------------------------------
 #-------------line icon-------------
 #--------------------------------------------
-icon1 = pygame.Surface((50, 50))
-icon1.fill((255,255,255))
-#pygame.draw.line(surface, color, start_pos, end_pos, width) -> Rect
-# draw horizontal line in icon surface
-pygame.draw.line(icon1, BLUE, (5,25), (45,25), 5)
-# draw vertical line in icon surface
-pygame.draw.line(icon1, BLUE, (25,5), (25,45), 5)
-#blit icon on main surface
-window.blit(icon1, (0, 0))
+# icon1 = pygame.Surface((50, 50))
+# icon1.fill((255,255,255))
+# #pygame.draw.line(surface, color, start_pos, end_pos, width) -> Rect
+# # draw horizontal line in icon surface
+# pygame.draw.line(icon1, BLUE, (5,25), (45,25), 5)
+# # draw vertical line in icon surface
+# pygame.draw.line(icon1, BLUE, (25,5), (25,45), 5)
+# #blit icon on main surface
+# window.blit(icon1, (0, 0))
 
 #--------------------------------------------
-#----------------square icon----------------
+#----------------triangle icon----------------
 #--------------------------------------------
+icon3 = pygame.Surface((50, 50))
+icon3.fill((255,255,255))
+#line(surface, color, start_pos, end_pos, width) -> Rect
+# draw horizontal line in icon surface
+#Rect(left, top, width, height) -> Rect, Rect((left, top), (width, height)) -> Rect
+pygame.draw.polygon(icon3, GREEN, ((10,40),(40,40),(25, 10)),4)
+#blit icon on main surface
+window.blit(icon3, (0, 0))
+
+#--------------------------------------------
+#----------------rectangle empty icon----------------
+#--------------------------------------------
+#Demo 1: Rectangle
+#pygame.draw.rect(surface, color, pygame.Rect(left, top, width, height))
+
 icon2 = pygame.Surface((50, 50))
 icon2.fill((255,255,255))
 #line(surface, color, start_pos, end_pos, width) -> Rect
@@ -96,28 +111,67 @@ pygame.draw.rect(icon2, RED, [10,10,30,30],5)
 window.blit(icon2, (60, 0))
 
 #--------------------------------------------
-#----------------circle icon----------------
+#----------------circle empty icon-----------------
 #--------------------------------------------
 icon3 = pygame.Surface((50, 50))
 icon3.fill((255,255,255))
 #line(surface, color, start_pos, end_pos, width) -> Rect
 # draw horizontal line in icon surface
 #Rect(left, top, width, height) -> Rect, Rect((left, top), (width, height)) -> Rect
-pygame.draw.circle(icon3, GREEN, (25, 25 ), 20, 5)
+pygame.draw.circle(icon3, GREEN, (25, 25 ), 15, 5)
+#blit icon on main surface
+window.blit(icon3, (120, 0))
+
+#--------------------------------------------
+#----------------triangle icon----------------
+#--------------------------------------------
+icon3 = pygame.Surface((50, 50))
+icon3.fill((255,255,255))
+#line(surface, color, start_pos, end_pos, width) -> Rect
+# draw horizontal line in icon surface
+#Rect(left, top, width, height) -> Rect, Rect((left, top), (width, height)) -> Rect
+pygame.draw.polygon(icon3, GREEN, ((10,40),(40,40),(25, 10)))
 #blit icon on main surface
 window.blit(icon3, (0, 60))
 
+# #--------------------------------------------
+# #----------------diamond icon----------------
+# #--------------------------------------------
+# icon4 = pygame.Surface((50, 50))
+# icon4.fill((255,255,255))
+# #line(surface, color, start_pos, end_pos, width) -> Rect
+# # draw horizontal line in icon surface
+# #Rect(left, top, width, height) -> Rect, Rect((left, top), (width, height)) -> Rect
+# pygame.draw.polygon(icon4, GREEN, ((5,25),(25,5),(45, 25),(25, 45)))
+# #blit icon on main surface
+# window.blit(icon4, (0, 60))
+
 #--------------------------------------------
-#----------------diamond icon----------------
+#----------------rectangle filled icon----------------
 #--------------------------------------------
-icon3 = pygame.Surface((50, 50))
-icon3.fill((255,255,255))
+#Demo 1: Rectangle
+#pygame.draw.rect(surface, color, pygame.Rect(left, top, width, height))
+
+icon5 = pygame.Surface((50, 50))
+icon5.fill((255,255,255))
 #line(surface, color, start_pos, end_pos, width) -> Rect
 # draw horizontal line in icon surface
 #Rect(left, top, width, height) -> Rect, Rect((left, top), (width, height)) -> Rect
-pygame.draw.circle(icon3, GREEN, (25, 25 ), 20, 5)
+pygame.draw.rect(icon5, RED, [10,10,30,30])
 #blit icon on main surface
-window.blit(icon3, (0, 60))
+window.blit(icon5, (60, 60))
+
+#--------------------------------------------
+#----------------circle filled icon-----------------
+#--------------------------------------------
+icon6 = pygame.Surface((50, 50))
+icon6.fill((255,255,255))
+#line(surface, color, start_pos, end_pos, width) -> Rect
+# draw horizontal line in icon surface
+#Rect(left, top, width, height) -> Rect, Rect((left, top), (width, height)) -> Rect
+pygame.draw.circle(icon6, GREEN, (25, 25 ), 15)
+#blit icon on main surface
+window.blit(icon6, (120, 60))
 
 #--------------------------------------------
 run = True
