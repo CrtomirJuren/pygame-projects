@@ -26,7 +26,7 @@ from pygame.locals import * # this is for shortcut pygame.QUIT -> QUIT
 
 FPS = 30
 WIN_W = 600
-WIN_H = 600 
+WIN_H = 600
 """ grid calculations
  GRID = 600*600
  GRID 6x6 = 36 pieces
@@ -80,7 +80,7 @@ HIGHLIGHTCOLOR = BLUE
 LINE = 'line'
 DONUT = 'donut'
 SQUARE = 'square'
-DIAMOND = 'diamond' 
+DIAMOND = 'diamond'
 LINES = 'lines'
 OVAL = 'oval'
 
@@ -120,19 +120,19 @@ def draw_background():
     for rect, color in tiles:
         pygame.draw.rect(background, color, rect)
 
-    DISPLAYSURF.blit(background, (0, 0))    
+    DISPLAYSURF.blit(background, (0, 0))
 
 #----------card-----------
 # 36 tiles
 cards = []
 for i in range(36):
-    
+
     position = card_position_list[i]
     rectangle = [position[1], position[0], 80, 80]
     surface = pygame.Surface((80,80))
     state = 'closed' #opened
     glow = False
-    
+
     dictionary = {'card_n': i,
                   'position': position,
                   'surface': surface,
@@ -141,7 +141,7 @@ for i in range(36):
                   'state': state
                   #'icon': RED
                   }
-    
+
     cards.append(dictionary)
     print(dictionary)
 card = cards[0]
@@ -157,26 +157,26 @@ def draw_rect_alpha(surface, color, rect):
 #----------------------------main loop-----------------------------------------
 #------------------------------------------------------------------------------
 def main():
-    
+
     # global variables
     global FPSCLOCK, DISPLAYSURF
-    
+
     # for positions
     position_pixel = (None, None)
     position_grid = (None, None)
     position_box = None
-    
+
     # for user events
     mouseMoved = False
     mouseClicked = False
     #--------------------------------------------------------------------------
     # init pygame
     pygame.init()
-    
+
     FPSCLOCK = pygame.time.Clock() # initialize clock
-    
+
     DISPLAYSURF = pygame.display.set_mode((WIN_W, WIN_H)) # initialize surface
-    
+
     pygame.display.set_caption('Memory Game')
 
     #---------------------------------------------------------
@@ -184,15 +184,15 @@ def main():
     draw_background()
 
     update_cards()
-    
+
     #--------------------------------------------------------------------------
     #-------------------------GAME loop----------------------------------------
     #--------------------------------------------------------------------------
     while True:
-        
+
         #----------------------event handling---------------------------------
         for event in pygame.event.get():
-            
+
             # event objects have type attribute
             if event.type == QUIT:
                 pygame.quit()
@@ -207,45 +207,47 @@ def main():
                 # mouse click position is in pixels
                 position_pixel = event.pos
                 # set click is true for functions
-                mouseCicked = True
+                mouseClicked = True
                 #print('mouse clicked')
         #---------------------------------------------------------------------
         # if mouse moved than highlight box
         if mouseMoved:
-            # window pixels to game grid 
+            # reset event flag
+            mouseMoved = False
+            # window pixels to game grid
             position_grid = pixel_pos_to_game_grid(position_pixel)
             # game grid to box number
             position_box = game_grid_to_touple_pos(position_grid)
-            
+
             # print('position_pixel = ', position_pixel)
             # print('position_grid = ', position_grid)
             # print('position_box = ', position_box)
-            
+
             glow_card(position_box)
-            
-            # reset event flag
-            mouseMoved = False
+
+
         #---------------------------------------------------------------------
-        if mouseClicked:
+        elif mouseClicked:
+            # reset event flag
             mouseClicked = False
-            
+
             show_card(position_box)
-        
+            print('mouse clicked')
+
         update_cards()
         #------------------------timing----------------------------------------
         # draws surface object stored in DISPLAYSURF
         #pygame.display.update()
         pygame.display.flip()
         FPSCLOCK.tick(FPS)
-    
+
 #------------------------------------------------------------------------------
 #-------------------------function definitions---------------------------------
 #------------------------------------------------------------------------------
 def update_cards():
     global cards
-    
+
     for card in cards:
-       
         # if card is selected, glow sides
         if card['glow']:
             # draw smaller rectangle for glowing
@@ -253,38 +255,50 @@ def update_cards():
                         card['rectangle'][1]+2,
                         card['rectangle'][2]-4,
                         card['rectangle'][3]-4]
-            pygame.draw.rect(DISPLAYSURF, BLUE, glow_pos, 4)
+            #pygame.draw.rect(DISPLAYSURF, BLUE, glow_pos, 4)
+            pygame.draw.rect(card['surface'], BLUE, [0,0,78,78], 4)
         else:
-            pygame.draw.rect(DISPLAYSURF, BLACK, card['rectangle'], 0)
-        
+            pygame.draw.rect(card['surface'], BLACK, [0,0,78,78], 4)
+            pass
+
         if card['state'] == 'opened':
-            pygame.draw.circle(shape_surf, color, (radius, radius), radius)
-            surface.blit(shape_surf, target_rect)
+            #pygame.draw.circle(DISPLAYSURF, RED, (card['rectangle'][0], card['rectangle'][1]), 2)
+            #surface.blit(DISPLAYSURF, card['rectangle'])
+            pass
         else:
             pass
-        
+
         # if i wanna combine all different shapes and icons, than blit everyting onw on top of another
-        # blit 
+        # blit
         #DISPLAYSURF.blit(background, (0, 0))
-    
+
+    # blit all cards to DISPLAYSURF
+    for card in cards:
+        #surface = card['surface']
+        DISPLAYSURF.blit(card['surface'], card['rectangle'])
+        #print('cards blitted')
+
+
+
 
 def show_card(position_box):
     global cards
-    
+
     for i, card in enumerate(cards):
         # set highlight selected card
-        if i == position_box: 
+        if i == position_box:
             card['state'] = 'opened'
         else:
             card['state'] = 'closed'
- 
-    
+
+
+
 def glow_card(position_box):
     global cards
-   
+
     for i, card in enumerate(cards):
         # set highlight selected card
-        if i == position_box: 
+        if i == position_box:
             card['glow'] = True
         else:
             card['glow'] = False
@@ -326,11 +340,11 @@ def game_grid_to_touple_pos(touple_grid):
     for i, touple in enumerate(grid_touple_lst):
         if touple_grid == touple:
             position_box = i
-    
+
     return position_box
-  
+
 #------------------------------------------------------------------------------
 #-------------------------Start application------------------------------------
-#------------------------------------------------------------------------------        
+#------------------------------------------------------------------------------
 if __name__ == '__main__':
     main()
