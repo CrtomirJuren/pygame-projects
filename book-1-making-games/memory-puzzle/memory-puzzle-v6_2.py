@@ -21,6 +21,8 @@ import random
 
 from pygame.locals import * # this is for shortcut pygame.QUIT -> QUIT
 
+import time
+
 #--------------------------------------------------------------------------
 #-------------------------constants----------------------------------------
 #--------------------------------------------------------------------------
@@ -140,7 +142,7 @@ icon_shapes = ['square_filled',
           'triangle_filled',
           'triangle_empty']
 
-#shapes = 2* shapes # create pairs of shapes = 6 pairs -> 12 cards
+icon_shapes = 2* icon_shapes # create pairs of shapes = 6 pairs -> 12 cards
 # create same shapes for testing
 #icon_shapes = 36 * icon_shapes[:1]
 #print(icon_shapes)
@@ -156,21 +158,16 @@ icon_surfaces = []
 
 #icon = {'surface': surface,'shape': shape,'color': color}
 icons = []
-
 for color in icon_colors:
     for shape in icon_shapes:
         surface = create_icon(shape, color)
-        
         icons.append({'surface': surface,'shape': shape,'color': color})
 print(icons)
 
 # shuffle icon list
-random.shuffle(icon_surfaces)
-# print("List after first shuffle:", number_list)
+random.shuffle(icons)
+random.shuffle(icons)
 
-random.shuffle(icon_surfaces)
-# print("List after second shuffle:", number_list)
-#print(icons)
 
 
 
@@ -330,18 +327,33 @@ def main():
                     if state == 0:
                         print('state 0')
                         show_card(position_box)
-                        state += 1 
-                        card_pair.append(card)
+                        card_pair.append(position_box)
+                        cards[position_box]['state'] = 'opened'
+                        state += 1
+                        update_cards()
                     
                     elif state == 1:
                         print('state 1')
                         state += 1
-                        card_pair.append(card)
+                        card_pair.append(position_box)
                         show_card(position_box)
-
+                        cards[position_box]['state'] = 'opened'
+                        update_cards()
+                        
+                        
                         # check if both cards are pairs, if they are, they become solved
-                        if card_pair[0]['icon_color'] == card_pair[1]['icon_color'] and card_pair[0]['icon_shape'] == card_pair[1]['icon_shape']:
+                        card_one = cards[card_pair[0]]
+                        card_two = cards[card_pair[1]]
+                        
+                        
+                        time.sleep(1)
+                        if card_one['icon_color'] == card_two['icon_color'] and card_one['icon_shape'] == card_two['icon_shape']:
                             print('pair found')
+                            cards[card_pair[0]]['solved'] = True
+                            cards[card_pair[1]]['solved'] = True
+                        else:
+                            cards[card_pair[0]]['state'] = 'closed'
+                            cards[card_pair[1]]['state'] = 'closed'
                     
                     elif state == 2:
                         print('state 2')
@@ -349,19 +361,19 @@ def main():
                         
                         # close all NON-SOLVED PAIRS
                         for card in cards:
-                            if not card['solved']:
-                                card['state'] = 'closed'
+                            if card['solved']:
+                                #print('closing cards')
+                                #card['state'] = 'closed'
+                                pass
                         
+                        update_cards()
                         #print(card_pair)
                         card_pair = []
                         state = 0
-                        pass
-                    
-            # # 
-            
+                        #update_cards()
 
         
-        update_cards()
+            #update_cards()
         #------------------------timing----------------------------------------
         # draws surface object stored in DISPLAYSURF
         #pygame.display.update()
@@ -375,30 +387,24 @@ def update_cards():
     global cards
 
     for card in cards:
-        # if card is selected, glow sides
-        if card['glow']:
-            # draw smaller rectangle for glowing
-            glow_pos = [card['rectangle'][0]+2,
-                        card['rectangle'][1]+2,
-                        card['rectangle'][2]-4,
-                        card['rectangle'][3]-4]
-            #pygame.draw.rect(DISPLAYSURF, BLUE, glow_pos, 4)
-            pygame.draw.rect(card['surface'], BLUE, [0,0,78,78], 4)
-        else:
-            pygame.draw.rect(card['surface'], BLACK, [0,0,78,78], 4)
-            pass
+        # # if card is selected, glow sides
+        # if card['glow']:
+        #     # draw smaller rectangle for glowing
+        #     glow_pos = [card['rectangle'][0]+2,
+        #                 card['rectangle'][1]+2,
+        #                 card['rectangle'][2]-4,
+        #                 card['rectangle'][3]-4]
+        #     pygame.draw.rect(card['surface'], BLUE, [0,0,78,78], 4)
+        # else:
+        #     pygame.draw.rect(card['surface'], BLACK, [0,0,78,78], 4)
 
         if card['state'] == 'opened':
             #pygame.draw.circle(DISPLAYSURF, RED, (card['rectangle'][0], card['rectangle'][1]), 2)
             #surface.blit(DISPLAYSURF, card['rectangle'])
             card['surface'].blit(card['icon_surface'], (15, 15))
-            pass
         else:
-            pass
-
-        # if i wanna combine all different shapes and icons, than blit everyting onw on top of another
-        # blit
-        #DISPLAYSURF.blit(background, (0, 0))
+            #card['surface'].blit(card['icon_surface'], (15, 15))
+            card['surface'].fill(BLACK)
 
     # blit all cards to DISPLAYSURF
     for card in cards:
@@ -431,6 +437,20 @@ def glow_card(position_box):
         else:
             card['glow'] = False
 
+    for card in cards:
+        # if card is selected, glow sides
+        if card['glow']:
+            # draw smaller rectangle for glowing
+            glow_pos = [card['rectangle'][0]+2,
+                        card['rectangle'][1]+2,
+                        card['rectangle'][2]-4,
+                        card['rectangle'][3]-4]
+            pygame.draw.rect(card['surface'], BLUE, [0,0,78,78], 4)
+        else:
+            pygame.draw.rect(card['surface'], BLACK, [0,0,78,78], 4)
+
+    DISPLAYSURF.blit(card['surface'], card['rectangle'])
+    
 #--------------------------BACKGROUND--------------------------------------
 def draw_background():
     background = pygame.Surface(DISPLAYSURF.get_size())
