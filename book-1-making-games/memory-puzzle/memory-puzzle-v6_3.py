@@ -27,7 +27,7 @@ import time
 #-------------------------constants----------------------------------------
 #--------------------------------------------------------------------------
 
-FPS = 10
+FPS = 30
 WIN_W = 600
 WIN_H = 600
 """ grid calculations
@@ -145,8 +145,9 @@ for color in icon_colors:
 #print(icons)
 
 # shuffle icon list
+random.seed(99)
 random.shuffle(icons)
-random.shuffle(icons)
+
 
 #----------card-----------
 # 36 tiles
@@ -197,7 +198,7 @@ def main():
     # 1 = first card opened
     # 2 = second card opened
     # 
-    
+    state_transition = True
     # for positions
     position_pixel = (None, None)
     position_grid = (None, None)
@@ -226,7 +227,8 @@ def main():
     #--------------------------------------------------------------------------
     #-------------------------GAME loop----------------------------------------
     #--------------------------------------------------------------------------
-    while True:
+    gameOver = False
+    while not gameOver:
 
         #----------------------event handling---------------------------------
         for event in pygame.event.get():
@@ -247,95 +249,111 @@ def main():
                 # set click is true for functions
                 mouseClicked = True
                 #print('mouse clicked')
-        #---------------------------------------------------------------------
-        # if mouse moved than highlight box
-        if mouseMoved:
-            # reset event flag
-            mouseMoved = False
-            # window pixels to game grid
-            position_grid = pixel_pos_to_game_grid(position_pixel)
-            # game grid to box number
-            position_box = game_grid_to_touple_pos(position_grid)
-
-            # print('position_pixel = ', position_pixel)
-            # print('position_grid = ', position_grid)
-            #print('position_box = ', position_box)
-
-            glow_card(position_box)
-
-        
-
-        #---------------------------------------------------------------------
-        elif mouseClicked: #and cardSelected
-            # reset event flag
-            mouseClicked = False
-            # print('mouse clicked')
-            
-            # # get clicked card properties
-            # card = cards[position_box]
-            
-            # # only do stuff on closed cards
-            # if card['state'] == 'closed': 
                 
-            #     # check if new card selected
-            #     if  position_box !=  position_box_old:
-            #         position_box_old = position_box
-            #         print('new card opened')
+            #---------------------------------------------------------------------
+            # if mouse moved than highlight box
+            if mouseMoved:
+                # reset event flag
+                mouseMoved = False
+                # window pixels to game grid
+                position_grid = pixel_pos_to_game_grid(position_pixel)
+                # game grid to box number
+                position_box = game_grid_to_touple_pos(position_grid)
+    
+                # print('position_pixel = ', position_pixel)
+                # print('position_grid = ', position_grid)
+                #print('position_box = ', position_box)
+    
+                glow_card(position_box)
+      
+    
+            #---------------------------------------------------------------------
+            elif mouseClicked: #and cardSelected
+                # reset event flag
+                mouseClicked = False
+                print('mouse clicked')
+                
+                # # get clicked card properties
+                card = cards[position_box]
+                
+                # # only do stuff on closed cards
+                if card['state'] == 'closed': 
+                    print('closed card selected')
                     
-            #         # if none cards opened
-            #         if state == 0:
-            #             print('state 0')
-            #             show_card(position_box)
-            #             card_pair.append(position_box)
-            #             cards[position_box]['state'] = 'opened'
-            #             state += 1
-            #             update_cards()
+                #     # check if new card selected
+                #     if  position_box !=  position_box_old:
+                #         position_box_old = position_box
+                #         print('new card opened')
+                
+                    state += 1
+                    state_transition = True
                     
-            #         elif state == 1:
-            #             print('state 1')
-            #             state += 1
-            #             card_pair.append(position_box)
-            #             show_card(position_box)
-            #             cards[position_box]['state'] = 'opened'
-            #             update_cards()
-                        
-                        
-            #             # check if both cards are pairs, if they are, they become solved
-            #             card_one = cards[card_pair[0]]
-            #             card_two = cards[card_pair[1]]
-                        
-                        
-            #             time.sleep(1)
-            #             if card_one['icon_color'] == card_two['icon_color'] and card_one['icon_shape'] == card_two['icon_shape']:
-            #                 print('pair found')
-            #                 cards[card_pair[0]]['solved'] = True
-            #                 cards[card_pair[1]]['solved'] = True
-            #             else:
-            #                 cards[card_pair[0]]['state'] = 'closed'
-            #                 cards[card_pair[1]]['state'] = 'closed'
-                    
-            #         elif state == 2:
-            #             print('state 2')
-            #             #close_card(position_box)
-                        
-            #             # close all NON-SOLVED PAIRS
-            #             for card in cards:
-            #                 if card['solved']:
-            #                     #print('closing cards')
-            #                     #card['state'] = 'closed'
-            #                     pass
-                        
-            #             update_cards()
-            #             #print(card_pair)
-            #             card_pair = []
-            #             state = 0
-            #             #update_cards()
-
+        #--------------------------GAME STATEMACHINE----------------------------            
+        if state == 0:
+            if state_transition:
+                print('state 0: waiting on first card to open')
+                state_transition = False
         
-            # #update_cards()
+        # SHOW FIRST SELECTED CARD
+        elif state == 1:
+            print('state 1: first card opened')
+
+            open_card(position_box)
+            card_0 = position_box
+            state = 2
+        
+        elif state == 2:
+            if state_transition:
+                print('state 2: waiting on second card to open')
+                state_transition = False
+            
+        # SHOW SECOND SELECTED CARD    
+        elif state == 3:
+            print('state 3: second card opened')
+
+            open_card(position_box)
+            card_1 = position_box
+
+            state = 4
+
+        # AUTOMATIC: CHECK IF CARDS ARE PAIR   
+        elif state == 4:        
+            print('state 4: checking for conditions')       
+            time.sleep(1)
+            state = 0
+
+            shapeMatch = False
+            colorMatch = False
+            
+            if cards[card_0]['icon_color'] == cards[card_1]['icon_color']:
+                colorMatch = True
+            if cards[card_0]['icon_shape'] == cards[card_1]['icon_shape']:
+                shapeMatch = True
+            
+            if colorMatch and shapeMatch:
+                cards[card_0]['solved'] = True
+                cards[card_1]['solved'] = True
+                print('its a pair!')
+            else:
+                cards[card_0]['state'] = 'closed'
+                cards[card_1]['state'] = 'closed'
+                print('no pair')            
+            
+            update_cards()
+            
+            # CHECK IF ALL CARDS ARE SOLVED
+            solved = []
+            for card in cards:
+                solved.append(card['solved'])
+                
+            #All checks wether all values in a list interpret to True
+            if all(solved):
+                print('congratulations, all cards solved, you have won !')
+                time.sleep(2)
+                gameOver = True
+
         #------------------------timing----------------------------------------
         # draws surface object stored in DISPLAYSURF
-        #pygame.display.update()
         pygame.display.flip()
         FPSCLOCK.tick(FPS)
 
@@ -346,16 +364,6 @@ def update_cards():
     global cards
 
     for card in cards:
-        # # if card is selected, glow sides
-        # if card['glow']:
-        #     # draw smaller rectangle for glowing
-        #     glow_pos = [card['rectangle'][0]+2,
-        #                 card['rectangle'][1]+2,
-        #                 card['rectangle'][2]-4,
-        #                 card['rectangle'][3]-4]
-        #     pygame.draw.rect(card['surface'], BLUE, [0,0,78,78], 4)
-        # else:
-        #     pygame.draw.rect(card['surface'], BLACK, [0,0,78,78], 4)
 
         if card['state'] == 'opened':
             #pygame.draw.circle(DISPLAYSURF, RED, (card['rectangle'][0], card['rectangle'][1]), 2)
@@ -367,24 +375,23 @@ def update_cards():
 
     # blit all cards to DISPLAYSURF
     for card in cards:
-        #surface = card['surface']
         DISPLAYSURF.blit(card['surface'], card['rectangle'])
-        #print('cards blitted')
 
 
 
-
-def show_card(position_box):
+def open_card(position_box):
     global cards
 
-    for i, card in enumerate(cards):
-        # set highlight selected card
-        if i == position_box:
-            card['state'] = 'opened'
+    cards[position_box]['state'] = 'opened'    
+        
+    # blit all cards to DISPLAYSURF
+    for card in cards:
+        if card['state'] == 'opened':
+            card['surface'].blit(card['icon_surface'], (15, 15))
         else:
-            card['state'] = 'closed'
+            card['surface'].fill(BLACK)
 
-
+        DISPLAYSURF.blit(card['surface'], card['rectangle'])
 
 def glow_card(position_box):
     global cards
@@ -466,3 +473,6 @@ def game_grid_to_touple_pos(touple_grid):
 #------------------------------------------------------------------------------
 if __name__ == '__main__':
     main()
+    
+    pygame.quit()
+    sys.exit()

@@ -11,3 +11,4 @@ http://inventwithpython.com/pygame/chapter3.html
 - v5:    creating card icons, list, shuffle icons
 - v6:    creating game logic and state transitions    
 - v7:    add animation of turn card around after 2 sec
+
