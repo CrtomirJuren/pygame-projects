@@ -134,6 +134,13 @@ spamRect = pygame.Rect(10, 20, 200, 300)
 **myRect.midtop** 			A tuple of two ints: (centerx, top)
 **myRect.midbottom** 	A tuple of two ints: (centerx, bottom)
 
+All of these attributes can be assigned to:
+
+```
+rect1.right = 10
+rect2.center = (20,30)
+```
+
 ## Convert
 
 Before you use convert() on any surface, screen has to be initialized with set_mode()
@@ -196,12 +203,11 @@ pygame.transform.scale(Surface, (width, height))
 
 ## Circles
 
-```
+```python
 pygame.draw.circle(gameDisplay, self.colour, (self.x, self.y), self.size, self.thickness)
 
 ## Rectangles
 - Returns a Rect moved x pixels horizontally and y pixels vertically
-​```python
 Rect.move(x, y)
 ```
 
@@ -344,6 +350,38 @@ Call once per frame to get a list of events that occurred since the last time py
   - MOUSEBUTTONDOWN pos, button
   - JOYAXISMOTION joy, axis, value
 
+### Mouse events
+
+- lmb, mmb, rmb = pygame.mouse.get_pressed Returns the mouse buttons pressed as a tuple of three
+  booleans, one for the left, middle, and right mouse buttons.
+-  pygame.mouse.get_rel—Returns the relative mouse movement (or mickeys) as a tuple
+  with the x and y relative movement.
+- pygame.mouse.get_pos—Returns the mouse coordinates as a tuple of the x and y values.
+- pygame.mouse.set_pos—Sets the mouse position. Takes the coordinate as a tuple or list
+  for x and y.
+- pygame.mouse.set_visible—Changes the visibility of the standard mouse cursor. If
+  False, the cursor will be invisible
+- pygame.mouse.get_focused—Returns True if the Pygame window is receiving mouse
+  input. When Pygame runs in a window, it will only receive mouse input when the window
+  is selected and at the front of the display.
+- pygame.mouse.set_cursor—Sets the standard cursor image. This is rarely needed since
+  better results can be achieved by blitting an image to the mouse coordinate.
+- pyGame.mouse.get_cursor—Gets the standard cursor image. See the previous item.
+
+### Joystic Events
+
+• pygame.joystick.init—Initializes the joystick module. This is called automatically by
+pygame.init, so you rarely need to call it yourself.
+• pygame.joystick.quit—Uninitializes the joystick module. Like init, this function is
+called automatically and so is not often needed.
+• pygame.joystick.get_init—Returns True if the joystick module has been initialized. If it
+returns False, the following joystick functions won’t work.
+• pygame.joystick.get_count—Returns the number of joysticks currently plugged into
+the computer.
+• pygame.joystick.Joystick—Creates a new joystick object that is used to access all information
+for that stick. The constructor takes the ID of the joystick—the first joystick is ID
+0, then ID 1, and so on, up to the number of joysticks available on the system.
+
 ## Fonts
 
 ```python
@@ -397,7 +435,90 @@ pygame.mixer.music.play(loops=0, offset) #  -1 to repeat indefinitely, offset in
 pygame.mixer.music.stop()
 ```
 
-# Sprites, Groups, and Collision Detection
+# Sprites,module with basic game object classes
+
+| [pygame.sprite.Sprite](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite) | Simple base class for visible game objects.                  |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [pygame.sprite.DirtySprite](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.DirtySprite) | A subclass of Sprite with more attributes and features.      |
+| [pygame.sprite.Group](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group) | A container class to hold and manage multiple Sprite objects. |
+| [pygame.sprite.RenderPlain](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.RenderPlain) | Same as pygame.sprite.Group                                  |
+| [pygame.sprite.RenderClear](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.RenderClear) | Same as pygame.sprite.Group                                  |
+| [pygame.sprite.RenderUpdates](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.RenderUpdates) | Group sub-class that tracks dirty updates.                   |
+| [pygame.sprite.OrderedUpdates](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.OrderedUpdates) | RenderUpdates sub-class that draws Sprites in order of addition. |
+| [pygame.sprite.LayeredUpdates](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredUpdates) | LayeredUpdates is a sprite group that handles layers and draws like OrderedUpdates. |
+| [pygame.sprite.LayeredDirty](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.LayeredDirty) | LayeredDirty group is for DirtySprite objects. Subclasses LayeredUpdates. |
+| [pygame.sprite.GroupSingle](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.GroupSingle) | Group container that holds a single sprite.                  |
+| [pygame.sprite.spritecollide](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.spritecollide) | Find sprites in a group that intersect another sprite.       |
+| [pygame.sprite.collide_rect](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.collide_rect) | Collision detection between two sprites, using rects.        |
+| [pygame.sprite.collide_rect_ratio](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.collide_rect_ratio) | Collision detection between two sprites, using rects scaled to a ratio. |
+| [pygame.sprite.collide_circle](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.collide_circle) | Collision detection between two sprites, using circles.      |
+| [pygame.sprite.collide_circle_ratio](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.collide_circle_ratio) | Collision detection between two sprites, using circles scaled to a ratio. |
+| [pygame.sprite.collide_mask](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.collide_mask) | Collision detection between two sprites, using masks.        |
+| [pygame.sprite.groupcollide](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.groupcollide) | Find all sprites that collide between two groups.            |
+| [pygame.sprite.spritecollideany](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.spritecollideany) | Simple test if a sprite intersects anything in a group.      |
+
+### Class pygame.sprite.Sprite
+
+*Simple base class for visible game objects.*
+
+| [pygame.sprite.Sprite.update](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite.update) | method to control sprite behavior       |
+| ------------------------------------------------------------ | --------------------------------------- |
+| [pygame.sprite.Sprite.add](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite.add) | add the sprite to groups                |
+| [pygame.sprite.Sprite.remove](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite.remove) | remove the sprite from groups           |
+| [pygame.sprite.Sprite.kill](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite.kill) | remove the Sprite from all Groups       |
+| [pygame.sprite.Sprite.alive](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite.alive) | does the sprite belong to any groups    |
+| [pygame.sprite.Sprite.groups](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite.groups) | list of Groups that contain this Sprite |
+
+### Class pygame.sprite.Group
+
+*A container class to hold and manage multiple Sprite objects.*
+
+| [pygame.sprite.Group.sprites](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.sprites) | list of the Sprites this Group contains     |
+| ------------------------------------------------------------ | ------------------------------------------- |
+| [pygame.sprite.Group.copy](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.copy) | duplicate the Group                         |
+| [pygame.sprite.Group.add](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.add) | add Sprites to this Group                   |
+| [pygame.sprite.Group.remove](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.remove) | remove Sprites from the Group               |
+| [pygame.sprite.Group.has](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.has) | test if a Group contains Sprites            |
+| [pygame.sprite.Group.update](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.update) | call the update method on contained Sprites |
+| [pygame.sprite.Group.draw](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.draw) | blit the Sprite images                      |
+| [pygame.sprite.Group.clear](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.clear) | draw a background over the Sprites          |
+| [pygame.sprite.Group.empty](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group.empty) | remove all Sprites                          |
+
+## Default subclassing Sprite Object
+
+```python
+class Block(pygame.sprite.Sprite):
+    # Constructor. Pass in the color of the block,
+    # and its x and y position
+    def __init__(self, color, width, height):
+       # Call the parent class (Sprite) constructor
+       pygame.sprite.Sprite.__init__(self)
+
+       # Create an image of the block, and fill it with a color.
+       # This could also be an image loaded from the disk.
+       self.image = pygame.Surface([width, height])
+       self.image.fill(color)
+
+       # Fetch the rectangle object that has the dimensions of the image
+       # Update the position of this object by setting the values of rect.x and rect.y
+       self.rect = self.image.get_rect()
+```
+
+# Groups, and Collision Detection
+
+Check if a sprite collides with a group. If collision, returns True
+
+```python
+# check if sprite and a group walls collides
+if pg.sprite.spritecollideany(self, self.game.walls)
+```
+Check for collision
+
+```
+hits = pg.sprite.spritecollide(self, self.game.walls, False) 
+```
+
+
 
 ```python
 class Monster(pygame.sprite.Sprite):
@@ -419,6 +540,17 @@ pygame.sprite.groupcollide(group1, group2, dokill1,
 dokill2): return Sprite_dict
 ```
 
+### Updating sprites icons
+
+This two codes are the same
+
+```python
+    self.all_sprites.draw(self.screen)
+```
+```python
+for sprite in self.all_sprites:
+    self.screen.blit(sprite.image, sprite.rect)
+```
 ## OOP Examples
 
 - drawing a circle
@@ -495,3 +627,33 @@ pygame.quit()
 ## Tetris
 
 [Python and Pygame Tutorial - Build Tetris! Full GameDev Course](https://www.youtube.com/watch?v=zfvxp7PgQ6c&t=1188s)
+
+## Tile map editor
+
+www.mapeditor.org
+
+Loading .tmx files made from tile-editors. 
+
+INSTAL pip install pytmx
+
+
+
+## **GAME PHYSICS - MECHANICS**
+
+### Tweening- easing functions
+
+- linear
+- quadratic
+- cubic
+- quartic
+- quintic
+- sinusoidal
+- exponential
+- crcular
+- elastic
+- back
+
+```python
+conda install -c conda-forge pytweening
+```
+

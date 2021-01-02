@@ -14,7 +14,7 @@ import random
 
 from pygame.locals import * # this is for shortcut pygame.QUIT -> QUIT
 
-import time
+# import time
 
 #--------------------------------------------------------------------------
 #-------------------------constants----------------------------------------
@@ -114,7 +114,7 @@ def main():
     # draw background
     draw_background()
     pygame.display.flip()
-    time.sleep(1)
+    pygame.time.wait(1000)
    
     # draw background
     create_game_grid()
@@ -122,7 +122,7 @@ def main():
     create_cards()
     update_cards()
     pygame.display.flip()
-    time.sleep(3)
+    pygame.time.wait(3000)
     
     close_cards()
     update_cards()
@@ -220,7 +220,7 @@ def main():
         # AUTOMATIC: CHECK IF CARDS ARE PAIR   
         elif state == 4:        
             print('state 4: checking for conditions')       
-            time.sleep(1)
+            pygame.time.wait(1000)
             state = 0
 
             shapeMatch = False
@@ -263,7 +263,7 @@ def main():
 def create_icons():
     global icons
 
-def close_cards(cards):
+def close_cards():
     global cards
     
     for i, card in enumerate(cards):
